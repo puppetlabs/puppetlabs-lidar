@@ -1,0 +1,6 @@
+# managed by puppet lidar module
+---
+master:
+  facts:
+    terminus: "<%= $lidar::facts_terminus %>"
+    cache: "<%= $lidar::facts_cache_terminus %>"

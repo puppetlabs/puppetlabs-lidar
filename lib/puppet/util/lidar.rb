@@ -9,11 +9,8 @@ require 'uri'
 require 'yaml'
 require 'json'
 require 'time'
-
-# rubocop:disable Style/ClassAndModuleCamelCase
 # splunk_hec.rb
 module Puppet::Util::Lidar
-
   def settings
     return @settings if @settings
     @settings_file = Puppet[:confdir] + '/lidar.yaml'
@@ -36,7 +33,7 @@ module Puppet::Util::Lidar
 
     uri = URI.parse(url)
 
-    headers = { "Content-Type" => "application/json" }
+    headers = { 'Content-Type' => 'application/json' }
 
     # Create the HTTP objects
     https = Net::HTTP.new(uri.host, uri.port)
@@ -51,14 +48,13 @@ module Puppet::Util::Lidar
     request.body = payload.to_json
     # Send the request
     response = https.request(request)
-    unless response.kind_of?(Net::HTTPSuccess)
-      Puppet.err _("LiDAR unable to submit data to %{uri} [%{code}] %{message}") % { uri: uri.path, code: response.code, message: response.msg }
-    end
+
+    Puppet.err _('LiDAR unable to submit data to %{uri} [%{code}] %{message}') % { uri: uri.path, code: response.code, message: response.msg } unless response.is_a?(Net::HTTPSuccess)
   end
 
   def send_facts(request, time)
-    lidar_facts_url = settings['lidarurl'] + "/facts"
-    lidar_packages_url = settings['lidarurl'] + "/packages"
+    lidar_facts_url = settings['lidar_url'] + '/facts'
+    lidar_packages_url = settings['lidar_url'] + '/packages'
 
     # Copied from the puppetdb fact indirector.  Explicitly strips
     # out the packages custom fact '_puppet_inventory_1'
@@ -73,37 +69,35 @@ module Puppet::Util::Lidar
     console = pe_console
 
     request_body = {
-      "key" => request.key,
-      "transaction_uuid" => request.options[:transaction_uuid],
-      "payload" => {
-        "certname" => facts.name,
-        "values" => facts.values,
-        "environment" => request.options[:environment] || request.environment.to_s,
-        "producer_timestamp" => Puppet::Util::Puppetdb.to_wire_time(time),
-        "producer" => Puppet[:node_name_value],
-        "pe_console" => console
+      'key' => request.key,
+      'transaction_uuid' => request.options[:transaction_uuid],
+      'payload' => {
+        'certname' => facts.name,
+        'values' => facts.values,
+        'environment' => request.options[:environment] || request.environment.to_s,
+        'producer_timestamp' => Puppet::Util::Puppetdb.to_wire_time(time),
+        'producer' => Puppet[:node_name_value],
+        'pe_console' => console,
       },
-      "time" => time,
+      'time' => time,
     }
 
     # Puppet.info "***LiDAR facts #{request_body.to_json}"
 
     send_to_lidar(lidar_facts_url, request_body)
 
-    if package_inventory
-      package_request = {
-        "key" => request.key,
-        "transaction_uuid" => request.options[:transaction_uuid],
-        "packages" => package_inventory,
-        "producer" => Puppet[:node_name_value],
-        "pe_console" => console,
-        "time" => time,
-      }
+    return unless package_inventory
+    package_request = {
+      'key' => request.key,
+      'transaction_uuid' => request.options[:transaction_uuid],
+      'packages' => package_inventory,
+      'producer' => Puppet[:node_name_value],
+      'pe_console' => console,
+      'time' => time,
+    }
 
-      #Puppet.info "***LiDAR packages #{package_request.to_json}"
+    # Puppet.info "***LiDAR packages #{package_request.to_json}"
 
-      send_to_lidar(lidar_packages_url, package_request)
-    end
+    send_to_lidar(lidar_packages_url, package_request)
   end
-
 end

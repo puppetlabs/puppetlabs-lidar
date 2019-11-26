@@ -1,7 +1,6 @@
-# managed by puppet
+# managed by puppet lidar module
 ---
-"lidarurl" : "<%= $lidar::lidarurl %>"
-
-<% if $lidar::pe_console{ -%>
-"pe_console" : "<%= $lidar::pe_console %>"
+'lidar_url': "<%= $lidar::report_processor::lidar_url %>"
+<% if $lidar::report_processor::pe_console{ -%>
+'pe_console': "<%= $lidar::report_processor::pe_console %>"
 <% } -%>

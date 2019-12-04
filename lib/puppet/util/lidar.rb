@@ -38,21 +38,19 @@ module Puppet::Util::Lidar
 
     headers = { "Content-Type" => "application/json" }
 
-    # options = { :metric_id => [:puppet, :report, :lidar] }
-    options = { }
-    if uri.user && uri.password
-      options[:basic_auth] = {
-        :user => uri.user,
-        :password => uri.password
-      }
-    end
-
-    use_ssl = uri.scheme == 'https'
-    ssl_context = use_ssl ? Puppet.lookup(:ssl_context) : nil
-    conn = Puppet::Network::HttpPool.connection(uri.host, uri.port, use_ssl: use_ssl, ssl_context: ssl_context)
-
-    response = conn.post(uri.path, payload.to_json, headers, options)
-
+    # Create the HTTP objects
+    https = Net::HTTP.new(uri.host, uri.port)
+    https.use_ssl = true
+    https.read_timeout = 5
+    https.open_timeout = 5
+    https.ssl_timeout = 5
+    # After POC, we will properly integrate with Puppets CA
+    # and use Puppet::Network::HttpPool.connection library
+    https.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    request = Net::HTTP::Post.new(uri.request_uri, headers)
+    request.body = payload.to_json
+    # Send the request
+    response = https.request(request)
     unless response.kind_of?(Net::HTTPSuccess)
       Puppet.err _("LiDAR unable to submit data to %{uri} [%{code}] %{message}") % { uri: uri.path, code: response.code, message: response.msg }
     end

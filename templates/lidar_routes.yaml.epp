@@ -2,5 +2,5 @@
 ---
 master:
   facts:
-    terminus: "<%= $lidar::facts_terminus %>"
-    cache: "<%= $lidar::facts_cache_terminus %>"
+    terminus: "<%= $lidar::report_processor::facts_terminus %>"
+    cache: "<%= $lidar::report_processor::facts_cache_terminus %>"

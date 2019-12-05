@@ -4,8 +4,9 @@ require 'puppet/util/lidar'
 require 'json'
 require 'time'
 
+# Lidar Facts
 class Puppet::Node::Facts::Lidar < Puppet::Node::Facts::Yaml
-  desc "Save facts to LiDAR and then to yamlcache."
+  desc 'Save facts to LiDAR and then to yamlcache.'
 
   include Puppet::Util::Lidar
 
@@ -26,7 +27,7 @@ class Puppet::Node::Facts::Lidar < Puppet::Node::Facts::Yaml
 
     profile('lidar_facts#save', [:lidar, :facts, :save, request.key]) do
       begin
-        Puppet.info "Submitting facts to LiDAR"
+        Puppet.info 'Submitting facts to LiDAR'
         current_time = Time.now
         send_facts(request, current_time.clone.utc)
       rescue StandardError => e

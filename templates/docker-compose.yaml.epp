@@ -1,0 +1,81 @@
+<%- | String[1] $lidar_version,
+| -%>
+version: '3'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.8-management
+    restart: always
+    hostname: rabbitmq
+    ports:
+      - 15672:15672
+      - 5672:5672
+    tty: true
+
+  mongo:
+    image: "artifactory.delivery.puppetlabs.net/lidar/mongo:<%= $lidar_version %>"
+    restart: always
+    volumes:
+      - ./backup:/backup
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_DATABASE: reports
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8082:8081
+
+  influxdb:
+    image: influxdb:1.7
+    volumes:
+      - ./backup:/backup
+    ports:
+      - 8086:8086
+    environment:
+      - INFLUXDB_DB=reports
+
+  ingest-queue:
+    ports:
+      - '3030:3030'
+    image: "artifactory.delivery.puppetlabs.net/lidar/ingest-queue:<%= $lidar_version %>"
+    restart: always
+    environment:
+      - MONGO_CONNECTION=mongodb://mongo:27017/reports
+      - INFLUX_URL=http://influxdb:8086
+      - RABBITMQ_CONNECTION=amqp://rabbitmq
+    depends_on:
+      - mongo
+      - influxdb
+      - rabbitmq
+    links:
+      - mongo
+      - influxdb
+      - rabbitmq
+    command: npm run start:all:prod
+
+  ui:
+    ports:
+      - '3000:3000'
+    image: "artifactory.delivery.puppetlabs.net/lidar/ui:<%= $lidar_version %>"
+    environment:
+      - REACT_APP_QUERY_API=http://<%= $facts['networking']['fqdn'] %>:4000/
+
+  query:
+    tty: true
+    ports:
+      - '4000:4000'
+    image: "artifactory.delivery.puppetlabs.net/lidar/query:<%= $lidar_version %>"
+    restart: always
+    environment:
+      - MONGO_CONNECTION=mongodb://mongo:27017/reports
+      - INFLUX_URL=http://influxdb:8086
+    depends_on:
+      - mongo
+      - influxdb
+    links:
+      - mongo
+      - influxdb
+    command: ["./wait-for-it.sh", "-t", "60", "mongo:27017", "--", "npm", "run", "start:mongo-prod"]

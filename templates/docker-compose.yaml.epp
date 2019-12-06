@@ -7,8 +7,8 @@ services:
     image: "artifactory.delivery.puppetlabs.net/lidar/frontdoor:<%= $lidar_version %>"
     restart: always
     environment:
-      - IDENTITY_SERVER=https://<%= $facts[networking][fqdn] %>:8443/auth/
-      - TOOL_DOMAIN=https://<%= $facts[networking][fqdn] %>:8443/
+      - IDENTITY_SERVER=https://<%= $facts["networking"]["fqdn"] %>:8443/auth/
+      - TOOL_DOMAIN=https://<%= $facts["networking"]["fqdn"] %>:8443/
     links:
       - identity
     ports:
@@ -64,8 +64,8 @@ services:
   ui:
     image: "artifactory.delivery.puppetlabs.net/lidar/ui:<%= $lidar_version %>"
     environment:
-      - REACT_APP_QUERY_API=https://<%= $facts[networking][fqdn] %>:8443/query
-      - REACT_APP_IDENTITY=https://<%= $facts[networking][fqdn] %>:8443/auth
+      - REACT_APP_QUERY_API=https://<%= $facts["networking"]["fqdn"] %>:8443/query
+      - REACT_APP_IDENTITY=https://<%= $facts["networking"]["fqdn"] %>:8443/auth
 
   query:
     tty: true

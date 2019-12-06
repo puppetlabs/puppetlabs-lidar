@@ -34,6 +34,8 @@ See [REFERENCE.md](REFERENCE.md) for example usage.
 
 ## Reference
 
+A custom fact named `lidar` is included as part of this module. It is a structured fact that returns information about the currently running instance of LiDAR.
+
 This module is documented via `pdk bundle exec puppet strings generate --format markdown`. Please see [REFERENCE.md](REFERENCE.md) for more info.
 
 ## Changelog

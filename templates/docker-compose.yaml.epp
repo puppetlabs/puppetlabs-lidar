@@ -3,13 +3,28 @@
 version: '3'
 
 services:
+  frontdoor:
+    image: "artifactory.delivery.puppetlabs.net/lidar/frontdoor:<%= $lidar_version %>"
+    restart: always
+    environment:
+      - IDENTITY_SERVER=https://<%= $facts["networking"]["fqdn"] %>:8443/auth/
+      - TOOL_DOMAIN=https://<%= $facts["networking"]["fqdn"] %>:8443/
+    links:
+      - identity
+    ports:
+      - 8443:443
+      - 8880:80
+
+  identity:
+    image: "artifactory.delivery.puppetlabs.net/lidar/identity:<%= $lidar_version %>"
+    restart: always
+    volumes:
+      - identity-data:/opt/jboss
+
   rabbitmq:
     image: rabbitmq:3.8-management
     restart: always
     hostname: rabbitmq
-    ports:
-      - 15672:15672
-      - 5672:5672
     tty: true
 
   mongo:
@@ -17,23 +32,13 @@ services:
     restart: always
     volumes:
       - ./backup:/backup
-    ports:
-      - 27017:27017
     environment:
       MONGO_INITDB_DATABASE: reports
-
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8082:8081
 
   influxdb:
     image: influxdb:1.7
     volumes:
       - ./backup:/backup
-    ports:
-      - 8086:8086
     environment:
       - INFLUXDB_DB=reports
 
@@ -57,16 +62,13 @@ services:
     command: npm run start:all:prod
 
   ui:
-    ports:
-      - '3000:3000'
     image: "artifactory.delivery.puppetlabs.net/lidar/ui:<%= $lidar_version %>"
     environment:
-      - REACT_APP_QUERY_API=http://<%= $facts['networking']['fqdn'] %>:4000/
+      - REACT_APP_QUERY_API=https://<%= $facts["networking"]["fqdn"] %>:8443/query
+      - REACT_APP_IDENTITY=https://<%= $facts["networking"]["fqdn"] %>:8443/auth
 
   query:
     tty: true
-    ports:
-      - '4000:4000'
     image: "artifactory.delivery.puppetlabs.net/lidar/query:<%= $lidar_version %>"
     restart: always
     environment:
@@ -79,3 +81,6 @@ services:
       - mongo
       - influxdb
     command: ["./wait-for-it.sh", "-t", "60", "mongo:27017", "--", "npm", "run", "start:mongo-prod"]
+
+volumes:
+  identity-data:

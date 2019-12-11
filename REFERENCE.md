@@ -6,7 +6,7 @@
 **Classes**
 
 * [`lidar::app_stack`](#lidarapp_stack): Configure a node to run LiDAR
-* [`lidar::report_processor`](#lidarreport_processor): Simple class to enable the LiDARA report processor
+* [`lidar::report_processor`](#lidarreport_processor): Simple class to enable the LiDAR report processor
 
 **Tasks**
 
@@ -74,6 +74,22 @@ The version of the LiDAR containers to use
 
 Default value: 'latest'
 
+##### `analytics`
+
+Data type: `Boolean`
+
+Enable/Disable collection of Analytic Data
+
+Default value: `true`
+
+##### `port`
+
+Data type: `Integer`
+
+Port number to access the LiDAR UI
+
+Default value: 443
+
 ##### `docker_users`
 
 Data type: `Optional[Array[String[1]]]`
@@ -84,26 +100,46 @@ Default value: `undef`
 
 ### lidar::report_processor
 
-Simple class to enable the LiDARA report processor
+Simple class to enable the LiDAR report processor
 
 #### Examples
 
-##### Configuration via Hiera
+##### Configuration via Hiera with default port
 
 ```puppet
 ---
-lidar::report_processor::lidar_url: 'https://lidar.example.com:3030'
+lidar::report_processor::lidar_url: 'https://lidar.example.com/in'
 lidar::report_processor::pe_console: 'pe-console.example.com'
 ```
 
-##### Configuration in a manifest
+##### Configuration via Hiera with custom port
+
+```puppet
+---
+lidar::report_processor::lidar_url: 'https://lidar.example.com:8443/in'
+lidar::report_processor::pe_console: 'pe-console.example.com'
+```
+
+##### Configuration in a manifest with default port
 
 ```puppet
 # Settings applied to both a master and compilers
 class { 'profile::masters_and_compilers':
   class { 'lidar::report_processor':
-    lidar_url  => 'https://lidar.example.com:3030',
-    pe_console => 'pe-console.example.com:3030',
+    lidar_url  => 'https://lidar.example.com/in',
+    pe_console => 'pe-console.example.com',
+  }
+}
+```
+
+##### Configuration in a manifest with custom port
+
+```puppet
+# Settings applied to both a master and compilers
+class { 'profile::masters_and_compilers':
+  class { 'lidar::report_processor':
+    lidar_url  => 'https://lidar.example.com:8443/in',
+    pe_console => 'pe-console.example.com',
   }
 }
 ```

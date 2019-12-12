@@ -6,6 +6,6 @@ set -e
 # This task does the dance requried to get docker-compose to use an updated container.
 #
 cd /opt/puppetlabs/lidar
-docker-compose rm -f $PT_service
+docker-compose rm -s -f $PT_service
 docker-compose pull $PT_service
 docker-compose up -d --remove-orphans

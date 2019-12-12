@@ -5,7 +5,7 @@
   "parameters": {
     "service": {
       "description": "The service you wish to update",
-      "type": "Enum[influxdb,ingest-queue,mongo,mongo-express,query,rabbitmq,ui]"
+      "type": "Enum[frontdoor,identity,influxdb,ingest-queue,mongo,query,rabbitmq,ui]"
     }
   }
 }

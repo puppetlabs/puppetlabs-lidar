@@ -228,7 +228,7 @@ Automates the dance needed to get docker-compose to use an updated image
 
 ##### `service`
 
-Data type: `Enum[influxdb,ingest-queue,mongo,mongo-express,query,rabbitmq,ui]`
+Data type: `Enum[frontdoor,identity,influxdb,ingest-queue,mongo,query,rabbitmq,ui]`
 
 The service you wish to update
 

@@ -11,6 +11,7 @@
 **Tasks**
 
 * [`get_service_status`](#get_service_status): Get the status of the LiDAR docker-compose services
+* [`update_all_images`](#update_all_images): Automates the dance needed to get docker-compose to update the container for every service
 * [`use_updated_image`](#use_updated_image): Automates the dance needed to get docker-compose to use an updated image
 
 ## Classes
@@ -215,6 +216,12 @@ Default value: `undef`
 ### get_service_status
 
 Get the status of the LiDAR docker-compose services
+
+**Supports noop?** false
+
+### update_all_images
+
+Automates the dance needed to get docker-compose to update the container for every service
 
 **Supports noop?** false
 

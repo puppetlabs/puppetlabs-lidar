@@ -2,11 +2,17 @@
 #
 # This class takes care of configuring a node to run LiDAR.
 #
+# @param [Boolean] analytics
+#   Enable/Disable collection of Analytic Data
+#
 # @param [Boolean] create_docker_group
 #   Ensure the docker group is present.
 #
-# @param [String[1]] log_driver
-#   The log driver Docker will use
+# @param [Integer] http_port
+#   Insecure port number to access the LiDAR UI
+#
+# @param [Integer] https_port
+#   Secure port number to access the LiDAR UI
 #
 # @param [String[1]] compose_version
 #   The version of docker-compose to install
@@ -14,11 +20,8 @@
 # @param [String[1]] lidar_version
 #   The version of the LiDAR containers to use
 #
-# @param [Boolean] analytics
-#   Enable/Disable collection of Analytic Data
-#
-# @param [Integer] port
-#   Port number to access the LiDAR UI
+# @param [String[1]] log_driver
+#   The log driver Docker will use
 #
 # @param [Optional[Array[String[1]]]] docker_users
 #   Users to be added to the docker group on the system
@@ -37,10 +40,11 @@
 class lidar::app_stack (
   Boolean $analytics = true,
   Boolean $create_docker_group = true,
-  String[1] $log_driver = 'journald',
+  Integer $http_port = 80,
+  Integer $https_port = 443,
   String[1] $compose_version = '1.25.0',
   String[1] $lidar_version = 'latest',
-  Integer $port = 443,
+  String[1] $log_driver = 'journald',
   Optional[Array[String[1]]] $docker_users = undef,
 ){
   if $create_docker_group {
@@ -77,7 +81,8 @@ class lidar::app_stack (
       mode    => '0440',
       content => epp('lidar/docker-compose.yaml.epp', {
         'lidar_version' => $lidar_version,
-        'port'          => $port,
+        'http_port'     => $http_port,
+        'https_port'    => $https_port,
         'analytics'     => $analytics,
       }),
     ;

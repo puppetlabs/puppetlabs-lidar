@@ -1,5 +1,6 @@
 <%- | Boolean $analytics,
-      Integer $port,
+      Integer $http_port,
+      Integer $https_port,
       String[1] $lidar_version,
 | -%>
 version: '3'
@@ -9,13 +10,13 @@ services:
     image: "artifactory.delivery.puppetlabs.net/lidar/frontdoor:<%= $lidar_version %>"
     restart: always
     environment:
-      - IDENTITY_SERVER=https://<%= $facts["networking"]["fqdn"] %>:<%= $port %>/auth/
-      - TOOL_DOMAIN=https://<%= $facts["networking"]["fqdn"] %>:<%= $port %>/
+      - IDENTITY_SERVER=https://<%= $facts["networking"]["fqdn"] %>:<%= $https_port %>/auth/
+      - TOOL_DOMAIN=https://<%= $facts["networking"]["fqdn"] %>:<%= $https_port %>/
     links:
       - identity
     ports:
-      - <%= $port %>:443
-      - 8880:80
+      - <%= $https_port %>:443
+      - <%= $http_port %>:80
 
   identity:
     image: "artifactory.delivery.puppetlabs.net/lidar/identity:<%= $lidar_version %>"
@@ -67,8 +68,8 @@ services:
   ui:
     image: "artifactory.delivery.puppetlabs.net/lidar/ui:<%= $lidar_version %>"
     environment:
-      - REACT_APP_QUERY_API=https://<%= $facts["networking"]["fqdn"] %>:<%= $port %>/query
-      - REACT_APP_IDENTITY=https://<%= $facts["networking"]["fqdn"] %>:<%= $port %>/auth
+      - REACT_APP_QUERY_API=https://<%= $facts["networking"]["fqdn"] %>:<%= $https_port %>/query
+      - REACT_APP_IDENTITY=https://<%= $facts["networking"]["fqdn"] %>:<%= $https_port %>/auth
       - REACT_APP_ANALYTICS_ENABLED=<%= $analytics %>
 
   query:

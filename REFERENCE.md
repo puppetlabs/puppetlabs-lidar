@@ -42,6 +42,14 @@ class { 'lidar::app_stack':
 
 The following parameters are available in the `lidar::app_stack` class.
 
+##### `analytics`
+
+Data type: `Boolean`
+
+Enable/Disable collection of Analytic Data
+
+Default value: `true`
+
 ##### `create_docker_group`
 
 Data type: `Boolean`
@@ -50,13 +58,21 @@ Ensure the docker group is present.
 
 Default value: `true`
 
-##### `log_driver`
+##### `http_port`
 
-Data type: `String[1]`
+Data type: `Integer`
 
-The log driver Docker will use
+Insecure port number to access the LiDAR UI
 
-Default value: 'journald'
+Default value: 80
+
+##### `https_port`
+
+Data type: `Integer`
+
+Secure port number to access the LiDAR UI
+
+Default value: 443
 
 ##### `compose_version`
 
@@ -74,21 +90,13 @@ The version of the LiDAR containers to use
 
 Default value: 'latest'
 
-##### `analytics`
+##### `log_driver`
 
-Data type: `Boolean`
+Data type: `String[1]`
 
-Enable/Disable collection of Analytic Data
+The log driver Docker will use
 
-Default value: `true`
-
-##### `port`
-
-Data type: `Integer`
-
-Port number to access the LiDAR UI
-
-Default value: 443
+Default value: 'journald'
 
 ##### `docker_users`
 

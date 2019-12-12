@@ -14,6 +14,12 @@
 # @param [String[1]] lidar_version
 #   The version of the LiDAR containers to use
 #
+# @param [Boolean] analytics
+#   Enable/Disable collection of Analytic Data
+#
+# @param [Integer] port
+#   Port number to access the LiDAR UI
+#
 # @param [Optional[Array[String[1]]]] docker_users
 #   Users to be added to the docker group on the system
 #
@@ -29,10 +35,12 @@
 #   }
 #
 class lidar::app_stack (
+  Boolean $analytics = true,
   Boolean $create_docker_group = true,
   String[1] $log_driver = 'journald',
   String[1] $compose_version = '1.25.0',
   String[1] $lidar_version = 'latest',
+  Integer $port = 443,
   Optional[Array[String[1]]] $docker_users = undef,
 ){
   if $create_docker_group {
@@ -67,7 +75,11 @@ class lidar::app_stack (
     '/opt/puppetlabs/lidar/docker-compose.yaml':
       ensure  => file,
       mode    => '0440',
-      content => epp('lidar/docker-compose.yaml.epp', { 'lidar_version' => $lidar_version }),
+      content => epp('lidar/docker-compose.yaml.epp', {
+        'lidar_version' => $lidar_version,
+        'port'          => $port,
+        'analytics'     => $analytics,
+      }),
     ;
   }
 

@@ -1,4 +1,6 @@
-<%- | String[1] $lidar_version,
+<%- | Boolean $analytics,
+      Integer $port,
+      String[1] $lidar_version,
 | -%>
 version: '3'
 
@@ -7,12 +9,12 @@ services:
     image: "artifactory.delivery.puppetlabs.net/lidar/frontdoor:<%= $lidar_version %>"
     restart: always
     environment:
-      - IDENTITY_SERVER=https://<%= $facts["networking"]["fqdn"] %>:8443/auth/
-      - TOOL_DOMAIN=https://<%= $facts["networking"]["fqdn"] %>:8443/
+      - IDENTITY_SERVER=https://<%= $facts["networking"]["fqdn"] %>:<%= $port %>/auth/
+      - TOOL_DOMAIN=https://<%= $facts["networking"]["fqdn"] %>:<%= $port %>/
     links:
       - identity
     ports:
-      - 8443:443
+      - <%= $port %>:443
       - 8880:80
 
   identity:
@@ -22,7 +24,7 @@ services:
       - identity-data:/opt/jboss
 
   rabbitmq:
-    image: rabbitmq:3.8-management
+    image: "artifactory.delivery.puppetlabs.net/lidar/rabbitmq:<%= $lidar_version %>"
     restart: always
     hostname: rabbitmq
     tty: true
@@ -31,20 +33,21 @@ services:
     image: "artifactory.delivery.puppetlabs.net/lidar/mongo:<%= $lidar_version %>"
     restart: always
     volumes:
+      - mongo-data:/bitnami
       - ./backup:/backup
     environment:
-      MONGO_INITDB_DATABASE: reports
+      - MONGODB_DATABASE=reports
+      - ALLOW_EMPTY_PASSWORD=yes
 
   influxdb:
-    image: influxdb:1.7
+    image: "artifactory.delivery.puppetlabs.net/lidar/influxdb:<%= $lidar_version %>"
     volumes:
+      - influx-data:/var/lib/influxdb
       - ./backup:/backup
     environment:
       - INFLUXDB_DB=reports
 
   ingest-queue:
-    ports:
-      - '3030:3030'
     image: "artifactory.delivery.puppetlabs.net/lidar/ingest-queue:<%= $lidar_version %>"
     restart: always
     environment:
@@ -64,8 +67,9 @@ services:
   ui:
     image: "artifactory.delivery.puppetlabs.net/lidar/ui:<%= $lidar_version %>"
     environment:
-      - REACT_APP_QUERY_API=https://<%= $facts["networking"]["fqdn"] %>:8443/query
-      - REACT_APP_IDENTITY=https://<%= $facts["networking"]["fqdn"] %>:8443/auth
+      - REACT_APP_QUERY_API=https://<%= $facts["networking"]["fqdn"] %>:<%= $port %>/query
+      - REACT_APP_IDENTITY=https://<%= $facts["networking"]["fqdn"] %>:<%= $port %>/auth
+      - REACT_APP_ANALYTICS_ENABLED=<%= $analytics %>
 
   query:
     tty: true
@@ -84,3 +88,5 @@ services:
 
 volumes:
   identity-data:
+  mongo-data:
+  influx-data:

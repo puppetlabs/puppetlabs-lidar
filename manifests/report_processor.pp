@@ -1,6 +1,6 @@
-# Simple class to enable the LiDARA report processor
+# Simple class to enable the LiDAR report processor
 #
-# @summary Simple class to enable the LiDARA report processor
+# @summary Simple class to enable the LiDAR report processor
 #
 # @param [Stdlib::HTTPUrl] lidar_url
 #   The url to send reports to.
@@ -21,20 +21,33 @@
 # @param [Optional[Stdlib::Fqdn]] pe_console
 #   The FQDN of your PE Console.
 #
-# @example Configuration via Hiera
+# @example Configuration via Hiera with default port
 #   ---
-#   lidar::report_processor::lidar_url: 'https://lidar.example.com:3030'
+#   lidar::report_processor::lidar_url: 'https://lidar.example.com/in'
 #   lidar::report_processor::pe_console: 'pe-console.example.com'
 #
-# @example Configuration in a manifest
+# @example Configuration via Hiera with custom port
+#   ---
+#   lidar::report_processor::lidar_url: 'https://lidar.example.com:8443/in'
+#   lidar::report_processor::pe_console: 'pe-console.example.com'
+#
+# @example Configuration in a manifest with default port
 #   # Settings applied to both a master and compilers
 #   class { 'profile::masters_and_compilers':
 #     class { 'lidar::report_processor':
-#       lidar_url  => 'https://lidar.example.com:3030',
-#       pe_console => 'pe-console.example.com:3030',
+#       lidar_url  => 'https://lidar.example.com/in',
+#       pe_console => 'pe-console.example.com',
 #     }
 #   }
 #
+# @example Configuration in a manifest with custom port
+#   # Settings applied to both a master and compilers
+#   class { 'profile::masters_and_compilers':
+#     class { 'lidar::report_processor':
+#       lidar_url  => 'https://lidar.example.com:8443/in',
+#       pe_console => 'pe-console.example.com',
+#     }
+#   }
 class lidar::report_processor (
   Stdlib::HTTPUrl $lidar_url,
   Boolean $enable_reports = true,

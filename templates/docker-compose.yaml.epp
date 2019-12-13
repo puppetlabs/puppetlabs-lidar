@@ -10,6 +10,7 @@ services:
     image: "artifactory.delivery.puppetlabs.net/lidar/frontdoor:<%= $lidar_version %>"
     restart: always
     environment:
+      - IDENTITY=<%= $facts["networking"]["fqdn"] %>
       - IDENTITY_SERVER=https://<%= $facts["networking"]["fqdn"] %>:<%= $https_port %>/auth/
       - TOOL_DOMAIN=https://<%= $facts["networking"]["fqdn"] %>:<%= $https_port %>/
     links:

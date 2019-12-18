@@ -8,8 +8,8 @@
 # @param [Boolean] create_docker_group
 #   Ensure the docker group is present.
 #
-# @param [Integer] http_port
-#   Insecure port number to access the LiDAR UI
+# @param [Boolean] manage_docker
+#   Install and manage docker as part of app_stack
 #
 # @param [Integer] https_port
 #   Secure port number to access the LiDAR UI
@@ -40,7 +40,7 @@
 class lidar::app_stack (
   Boolean $analytics = true,
   Boolean $create_docker_group = true,
-  Integer $http_port = 80,
+  Boolean $manage_docker = true,
   Integer $https_port = 443,
   String[1] $compose_version = '1.25.0',
   String[1] $lidar_version = 'latest',
@@ -51,14 +51,18 @@ class lidar::app_stack (
     ensure_resource('group', 'docker', {'ensure' => 'present' })
   }
 
-  class { 'docker':
-    docker_users => $docker_users,
-    log_driver   => $log_driver,
-  }
+  if $manage_docker {
 
-  class { 'docker::compose':
-    ensure  => present,
-    version => $compose_version,
+    class { 'docker':
+      docker_users => $docker_users,
+      log_driver   => $log_driver,
+    }
+
+    class { 'docker::compose':
+      ensure  => present,
+      version => $compose_version,
+    }
+
   }
 
   file {
@@ -81,7 +85,6 @@ class lidar::app_stack (
       mode    => '0440',
       content => epp('lidar/docker-compose.yaml.epp', {
         'lidar_version' => $lidar_version,
-        'http_port'     => $http_port,
         'https_port'    => $https_port,
         'analytics'     => $analytics,
       }),

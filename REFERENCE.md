@@ -59,13 +59,13 @@ Ensure the docker group is present.
 
 Default value: `true`
 
-##### `http_port`
+##### `manage_docker`
 
-Data type: `Integer`
+Data type: `Boolean`
 
-Insecure port number to access the LiDAR UI
+Install and manage docker as part of app_stack
 
-Default value: 80
+Default value: `true`
 
 ##### `https_port`
 

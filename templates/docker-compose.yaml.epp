@@ -1,5 +1,4 @@
 <%- | Boolean $analytics,
-      Integer $http_port,
       Integer $https_port,
       String[1] $lidar_version,
 | -%>
@@ -17,7 +16,6 @@ services:
       - identity
     ports:
       - <%= $https_port %>:443
-      - <%= $http_port %>:80
 
   identity:
     image: "artifactory.delivery.puppetlabs.net/lidar/identity:<%= $lidar_version %>"

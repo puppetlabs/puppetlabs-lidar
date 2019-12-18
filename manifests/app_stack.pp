@@ -17,6 +17,12 @@
 # @param [String[1]] compose_version
 #   The version of docker-compose to install
 #
+# @param [String[1]] image_prefix
+#   The string that comes before the name of each
+#   container. This can be changed to support private
+#   image repositories such as for internal testing or
+#   air gapped environments.
+#
 # @param [String[1]] lidar_version
 #   The version of the LiDAR containers to use
 #
@@ -43,7 +49,8 @@ class lidar::app_stack (
   Boolean $manage_docker = true,
   Integer $https_port = 443,
   String[1] $compose_version = '1.25.0',
-  String[1] $lidar_version = 'latest',
+  String[1] $image_prefix = 'puppet/lidar-',
+  String[1] $lidar_version = '1.0.0-alpha',
   String[1] $log_driver = 'journald',
   Optional[Array[String[1]]] $docker_users = undef,
 ){
@@ -84,6 +91,7 @@ class lidar::app_stack (
       ensure  => file,
       mode    => '0440',
       content => epp('lidar/docker-compose.yaml.epp', {
+        'image_prefix'  => $image_prefix,
         'lidar_version' => $lidar_version,
         'https_port'    => $https_port,
         'analytics'     => $analytics,

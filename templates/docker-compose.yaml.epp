@@ -6,6 +6,13 @@
 version: '3'
 
 services:
+  data-util:
+    image: "artifactory.delivery.puppetlabs.net/lidar/data-util:<%= $lidar_version %>"
+    environment:
+      - DATA_DIR=/data
+    volumes:
+      - ./data:/data
+
   frontdoor:
     image: "artifactory.delivery.puppetlabs.net/lidar/frontdoor:<%= $lidar_version %>"
     restart: always

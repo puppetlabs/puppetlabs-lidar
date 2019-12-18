@@ -26,7 +26,7 @@ This module will modify the puppet.conf configuration of any master or compiler 
 
 ### Setup Requirements
 
-LiDAR only works with Puppet Enterprise. Stdlib is also required for this module to work.
+LiDAR only works with Puppet Enterprise.
 
 ## Usage
 

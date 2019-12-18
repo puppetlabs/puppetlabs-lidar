@@ -12,7 +12,7 @@ describe 'lidar::app_stack' do
         it { is_expected.to  contain_class('docker::compose').with_ensure('present') }
         it { is_expected.to  contain_file('/opt/puppetlabs/lidar').with_ensure('directory') }
         it { is_expected.to  contain_file('/opt/puppetlabs/lidar/backup').with_ensure('directory') }
-        it { is_expected.to  contain_file('/opt/puppetlabs/lidar/docker-compose.yaml').with_content(%r{lidar\/ingest-queue:latest"$}) }
+        it { is_expected.to  contain_file('/opt/puppetlabs/lidar/docker-compose.yaml').with_content(%r{puppet\/lidar-ingest-queue:\d+\.\d+\.\d+(-[a-z]+)?"$}) }
         it { is_expected.to  contain_docker_compose('lidar').with_compose_files(['/opt/puppetlabs/lidar/docker-compose.yaml']) }
       end
     end

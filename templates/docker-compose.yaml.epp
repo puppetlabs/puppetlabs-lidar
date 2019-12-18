@@ -1,19 +1,20 @@
 <%- | Boolean $analytics,
       Integer $https_port,
       String[1] $lidar_version,
+      String[1] $image_prefix,
 | -%>
 version: '3'
 
 services:
   data-util:
-    image: "artifactory.delivery.puppetlabs.net/lidar/data-util:<%= $lidar_version %>"
+    image: "<%= $image_prefix %>data-util:<%= $lidar_version %>"
     environment:
       - DATA_DIR=/data
     volumes:
       - ./data:/data
 
   frontdoor:
-    image: "artifactory.delivery.puppetlabs.net/lidar/frontdoor:<%= $lidar_version %>"
+    image: "<%= $image_prefix %>frontdoor:<%= $lidar_version %>"
     restart: always
     environment:
       - IDENTITY=<%= $facts["networking"]["fqdn"] %>
@@ -25,19 +26,19 @@ services:
       - <%= $https_port %>:443
 
   identity:
-    image: "artifactory.delivery.puppetlabs.net/lidar/identity:<%= $lidar_version %>"
+    image: "<%= $image_prefix %>identity:<%= $lidar_version %>"
     restart: always
     volumes:
       - identity-data:/opt/jboss
 
   rabbitmq:
-    image: "artifactory.delivery.puppetlabs.net/lidar/rabbitmq:<%= $lidar_version %>"
+    image: "<%= $image_prefix %>rabbitmq:<%= $lidar_version %>"
     restart: always
     hostname: rabbitmq
     tty: true
 
   mongo:
-    image: "artifactory.delivery.puppetlabs.net/lidar/mongo:<%= $lidar_version %>"
+    image: "<%= $image_prefix %>mongo:<%= $lidar_version %>"
     restart: always
     volumes:
       - mongo-data:/bitnami
@@ -47,7 +48,7 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
 
   influxdb:
-    image: "artifactory.delivery.puppetlabs.net/lidar/influxdb:<%= $lidar_version %>"
+    image: "<%= $image_prefix %>influxdb:<%= $lidar_version %>"
     volumes:
       - influx-data:/var/lib/influxdb
       - ./backup:/backup
@@ -55,7 +56,7 @@ services:
       - INFLUXDB_DB=reports
 
   ingest-queue:
-    image: "artifactory.delivery.puppetlabs.net/lidar/ingest-queue:<%= $lidar_version %>"
+    image: "<%= $image_prefix %>ingest-queue:<%= $lidar_version %>"
     restart: always
     environment:
       - MONGO_CONNECTION=mongodb://mongo:27017/reports
@@ -72,7 +73,7 @@ services:
     command: npm run start:all:prod
 
   ui:
-    image: "artifactory.delivery.puppetlabs.net/lidar/ui:<%= $lidar_version %>"
+    image: "<%= $image_prefix %>ui:<%= $lidar_version %>"
     environment:
       - REACT_APP_QUERY_API=https://<%= $facts["networking"]["fqdn"] %>:<%= $https_port %>/query
       - REACT_APP_IDENTITY=https://<%= $facts["networking"]["fqdn"] %>:<%= $https_port %>/auth
@@ -80,7 +81,7 @@ services:
 
   query:
     tty: true
-    image: "artifactory.delivery.puppetlabs.net/lidar/query:<%= $lidar_version %>"
+    image: "<%= $image_prefix %>query:<%= $lidar_version %>"
     restart: always
     environment:
       - MONGO_CONNECTION=mongodb://mongo:27017/reports

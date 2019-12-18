@@ -83,13 +83,24 @@ The version of docker-compose to install
 
 Default value: '1.25.0'
 
+##### `image_prefix`
+
+Data type: `String[1]`
+
+The string that comes before the name of each
+container. This can be changed to support private
+image repositories such as for internal testing or
+air gapped environments.
+
+Default value: 'puppet/lidar-'
+
 ##### `lidar_version`
 
 Data type: `String[1]`
 
 The version of the LiDAR containers to use
 
-Default value: 'latest'
+Default value: '1.0.0-alpha'
 
 ##### `log_driver`
 

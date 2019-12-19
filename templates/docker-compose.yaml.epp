@@ -8,6 +8,7 @@ version: '3'
 services:
   data-util:
     image: "<%= $image_prefix %>data-util:<%= $lidar_version %>"
+    tty: true
     environment:
       - DATA_DIR=/data
     volumes:

@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [1.0.0-alpha](https://github.com/puppetlabs/puppetlabs-lidar/tree/1.0.0-alpha) (2019-12-18)
+## [1.0.0-alpha](https://github.com/puppetlabs/puppetlabs-lidar/tree/1.0.0-alpha) (2019-12-19)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-lidar/compare/6ee29505bbb8682ed2cf5852be63c2ecef1a76ad...1.0.0-alpha)
 
@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Fixed
 
+- \(maint\) keep data-util open [\#18](https://github.com/puppetlabs/puppetlabs-lidar/pull/18) ([seamymckenna](https://github.com/seamymckenna))
 - Update enum in task [\#11](https://github.com/puppetlabs/puppetlabs-lidar/pull/11) ([genebean](https://github.com/genebean))
 - Fix confining fact to lidar nodes [\#4](https://github.com/puppetlabs/puppetlabs-lidar/pull/4) ([genebean](https://github.com/genebean))
 - \(LiDAR-145\) Front Door Integration [\#2](https://github.com/puppetlabs/puppetlabs-lidar/pull/2) ([seamymckenna](https://github.com/seamymckenna))

@@ -2,7 +2,7 @@
 #
 # @summary Simple class to enable the LiDAR report processor
 #
-# @param [Stdlib::HTTPUrl] lidar_url
+# @param [Lidar::Url] lidar_url
 #   The url to send reports to.
 #
 # @param [Boolean] enable_reports
@@ -48,8 +48,16 @@
 #       pe_console => 'pe-console.example.com',
 #     }
 #   }
+#
+# @example Send data to two LiDAR servers
+#   ---
+#   lidar::report_processor::lidar_url:
+#     - 'https://lidar-prod.example.com:8443/in'
+#     - 'https://lidar-staging.example.com:8443/in'
+#   lidar::report_processor::pe_console: 'pe-console.example.com'
+#
 class lidar::report_processor (
-  Stdlib::HTTPUrl $lidar_url,
+  Lidar::Url $lidar_url,
   Boolean $enable_reports = true,
   Boolean $manage_routes = true,
   String[1] $facts_terminus = 'puppetdb',
@@ -94,7 +102,10 @@ class lidar::report_processor (
     owner   => pe-puppet,
     group   => pe-puppet,
     mode    => '0640',
-    content => epp('lidar/lidar.yaml.epp'),
+    content => epp('lidar/lidar.yaml.epp', {
+      'lidar_urls' => Array($lidar_url, true),
+      'pe_console' => $pe_console,
+    }),
     notify  => Service['pe-puppetserver'],
   }
 }

@@ -13,15 +13,17 @@ Puppet::Reports.register_report(:lidar) do
   include Puppet::Util::Lidar
 
   def process
-    lidar_url = settings['lidar_url'] + '/data'
-
-    Puppet.info "LiDAR sending report to #{lidar_url}"
-
     # Add in pe_console & producer fields
     report_payload = JSON.parse(to_json)
     report_payload['pe_console'] = pe_console
     report_payload['producer'] = Puppet[:certname]
 
-    send_to_lidar(lidar_url, report_payload)
+    lidar_urls = settings['lidar_urls']
+
+    lidar_urls.each do |url|
+      lidar_url = "#{url}/data"
+      Puppet.info "LiDAR sending report to #{lidar_url}"
+      send_to_lidar(lidar_url, report_payload)
+    end
   end
 end

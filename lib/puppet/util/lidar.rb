@@ -9,7 +9,8 @@ require 'uri'
 require 'yaml'
 require 'json'
 require 'time'
-# splunk_hec.rb
+
+# Utility functions used by the report processor and the facts indirector.
 module Puppet::Util::Lidar
   def settings
     return @settings if @settings
@@ -53,8 +54,7 @@ module Puppet::Util::Lidar
   end
 
   def send_facts(request, time)
-    lidar_facts_url = settings['lidar_url'] + '/facts'
-    lidar_packages_url = settings['lidar_url'] + '/packages'
+    lidar_urls = settings['lidar_urls']
 
     # Copied from the puppetdb fact indirector.  Explicitly strips
     # out the packages custom fact '_puppet_inventory_1'
@@ -84,7 +84,11 @@ module Puppet::Util::Lidar
 
     # Puppet.info "***LiDAR facts #{request_body.to_json}"
 
-    send_to_lidar(lidar_facts_url, request_body)
+    lidar_urls.each do |url|
+      lidar_facts_url = "#{url}/facts"
+
+      send_to_lidar(lidar_facts_url, request_body)
+    end
 
     return unless package_inventory
     package_request = {
@@ -98,6 +102,9 @@ module Puppet::Util::Lidar
 
     # Puppet.info "***LiDAR packages #{package_request.to_json}"
 
-    send_to_lidar(lidar_packages_url, package_request)
+    lidar_urls.each do |url|
+      lidar_packages_url = "#{url}/packages"
+      send_to_lidar(lidar_packages_url, package_request)
+    end
   end
 end

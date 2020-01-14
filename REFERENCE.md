@@ -8,6 +8,10 @@
 * [`lidar::app_stack`](#lidarapp_stack): Configure a node to run LiDAR
 * [`lidar::report_processor`](#lidarreport_processor): Simple class to enable the LiDAR report processor
 
+**Data types**
+
+* [`Lidar::Url`](#lidarurl): 
+
 **Tasks**
 
 * [`get_service_status`](#get_service_status): Get the status of the LiDAR docker-compose services
@@ -164,13 +168,23 @@ class { 'profile::masters_and_compilers':
 }
 ```
 
+##### Send data to two LiDAR servers
+
+```puppet
+---
+lidar::report_processor::lidar_url:
+  - 'https://lidar-prod.example.com:8443/in'
+  - 'https://lidar-staging.example.com:8443/in'
+lidar::report_processor::pe_console: 'pe-console.example.com'
+```
+
 #### Parameters
 
 The following parameters are available in the `lidar::report_processor` class.
 
 ##### `lidar_url`
 
-Data type: `Stdlib::HTTPUrl`
+Data type: `Lidar::Url`
 
 The url to send reports to.
 
@@ -221,6 +235,14 @@ Data type: `Optional[Stdlib::Fqdn]`
 The FQDN of your PE Console.
 
 Default value: `undef`
+
+## Data types
+
+### Lidar::Url
+
+The Lidar::Url data type.
+
+Alias of `Variant[Array[Stdlib::HTTPUrl], Stdlib::HTTPUrl]`
 
 ## Tasks
 

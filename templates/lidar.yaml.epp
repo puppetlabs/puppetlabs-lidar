@@ -1,6 +1,12 @@
+<%- | Array[Stdlib::HTTPUrl] $lidar_urls,
+      Optional[Stdlib::Fqdn] $pe_console = undef,
+| -%>
 # managed by puppet lidar module
 ---
-'lidar_url': "<%= $lidar::report_processor::lidar_url %>"
-<% if $lidar::report_processor::pe_console{ -%>
-'pe_console': "<%= $lidar::report_processor::pe_console %>"
+'lidar_urls':
+<%  $lidar_urls.each |$url| { -%>
+  - '<%= $url %>'
+<% } -%>
+<% if $pe_console{ -%>
+'pe_console': '<%= $pe_console %>'
 <% } -%>

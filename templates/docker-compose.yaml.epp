@@ -55,6 +55,7 @@ services:
       - ./backup:/backup
     environment:
       - INFLUXDB_DB=reports
+      - INFLUXDB_DATA_MAX_VALUES_PER_TAG=400000
 
   ingest-queue:
     image: "<%= $image_prefix %>ingest-queue:<%= $lidar_version %>"

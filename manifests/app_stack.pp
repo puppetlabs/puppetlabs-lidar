@@ -50,7 +50,7 @@ class lidar::app_stack (
   Integer $https_port = 443,
   String[1] $compose_version = '1.25.0',
   String[1] $image_prefix = 'puppet/lidar-',
-  String[1] $lidar_version = '1.0.0-alpha',
+  String[1] $lidar_version = '1.0.0-alpha.2',
   String[1] $log_driver = 'journald',
   Optional[Array[String[1]]] $docker_users = undef,
 ){

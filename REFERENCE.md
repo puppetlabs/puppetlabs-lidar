@@ -104,7 +104,7 @@ Data type: `String[1]`
 
 The version of the LiDAR containers to use
 
-Default value: '1.0.0-alpha'
+Default value: '1.0.0-alphai.2'
 
 ##### `log_driver`
 

@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [1.0.0-alpha.2](https://github.com/puppetlabs/puppetlabs-lidar/tree/1.0.0-alpha.2) (2020-02-03)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-lidar/compare/1.0.0-alpha...1.0.0-alpha.2)
+
+### Added
+
+- \(INFC-19232\) Allow for sending data to multiple LiDAR servers [\#20](https://github.com/puppetlabs/puppetlabs-lidar/pull/20) ([genebean](https://github.com/genebean))
+
+### Fixed
+
+- Increase max values per tag limit [\#21](https://github.com/puppetlabs/puppetlabs-lidar/pull/21) ([Lukeaber](https://github.com/Lukeaber))
+
 ## [1.0.0-alpha](https://github.com/puppetlabs/puppetlabs-lidar/tree/1.0.0-alpha) (2019-12-19)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-lidar/compare/6ee29505bbb8682ed2cf5852be63c2ecef1a76ad...1.0.0-alpha)

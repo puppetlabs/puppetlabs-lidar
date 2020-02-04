@@ -1,6 +1,6 @@
 {
   "name": "puppetlabs-lidar",
-  "version": "1.0.0-alpha",
+  "version": "1.0.0-alpha.2",
   "author": "jpc",
   "summary": "Configures Puppet LiDAR",
   "license": "Apache-2.0",

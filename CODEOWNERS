@@ -2,11 +2,10 @@
 # take ownership of parts of the code base that should be reviewed by another
 # team.
 
-# This will cause InfraCore to be assigned review of any PR opened on this repo.
-# InfraCore is the primary maintainer of this module as its used to deploy the
+# This will cause DIO to be assigned review of any PR opened on this repo.
+# DIO is the primary maintainer of this module as its used to deploy the
 # internal instance of LiDAR.
 #
-# Additionally, Seamus McKenna will also be pinged as he is the primary person
-# from the LiDAR team doing review of this repository.
-* @puppetlabs/infracore @seamymckenna
+# Additionally, the LiDAR team will also get pinged.
+* @puppetlabs/dio @puppetlabs/lidar
 
